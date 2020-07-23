@@ -25,12 +25,6 @@ class TestPageController extends Controller {
       return this.error('请求失败', 500, 200);
     }
   }
-  async test() {
-    const stream = await this.ctx.getFileStream();
-    console.log(11);
-    console.log(stream);
-    return this.success({});
-  }
 }
 
 module.exports = TestPageController;
