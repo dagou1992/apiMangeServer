@@ -80,13 +80,10 @@ class ApiPageService extends Service {
 
   async delete(id, group) {
     try {
-      const result = await this.model('Api').findOneAndUpdate(
-        { id, deleted: false },
-        { deleted: true, updateTime: nowTimestamp() },
-      );
-      if (!result) {
-        throw this.error(`delete Api ${id} failed`);
-      }
+      const result = await this.update({
+        id,
+        deleted: true,
+      });
       await this.commonUpdate('apiPage.group', {
         id: Number(group),
         data: { $pull: { list: Number(id) } },

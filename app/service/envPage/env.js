@@ -1,46 +1,43 @@
 const Service = require('../../core/base_service');
 const { nowTimestamp } = require('../../util/time');
 
-class GroupService extends Service {
-  async query(data, onlyOne = false) {
+class EnvService extends Service {
+  async query() {
     try {
-      const result = await this.model('Group').find(
+      const result = await this.model('Env').find(
         {
-          ...data,
           deleted: false,
         },
         { _id: 0, __v: 0 },
       );
-      return onlyOne ? result[0] : result;
+      return result;
     } catch (e) {
       this.throwError(e);
     }
   }
-  async create({ name }) {
+  async create(data) {
     try {
-      const id = await this.createNewId('Group');
-      const group = await this.model('Group').create({
+      const id = await this.createNewId('Env');
+      const env = await this.model('Env').create({
         id,
-        name,
-        list: [],
+        ...data,
         createdTime: nowTimestamp(),
         updatedTime: nowTimestamp(),
         deleted: false,
       });
-      if (!group) {
-        throw this.error('create group failed');
+      if (!env) {
+        throw this.error('create env failed');
       }
-      return group;
+      return env;
     } catch (e) {
       this.throwError(e);
     }
   }
-
   async update(data) {
-    const { id, name } = data;
-    const result = await this.commonUpdate('apiPage.group', {
+    const { id, ...value } = data;
+    const result = await this.commonUpdate('envPage.env', {
       id,
-      data: { name },
+      data: value,
     });
     return result;
   }
@@ -58,4 +55,4 @@ class GroupService extends Service {
   }
 }
 
-module.exports = GroupService;
+module.exports = EnvService;
