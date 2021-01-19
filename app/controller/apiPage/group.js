@@ -25,6 +25,12 @@ class GroupController extends Controller {
     return this.success(result);
   }
 
+  async export() {
+    const { ctx, app, config } = this;
+    const result = await ctx.service.apiPage.group.export(ctx.request.body);
+    ctx.body = result;
+  }
+
   async delete() {
     const { ctx } = this;
     const { id } = ctx.params;

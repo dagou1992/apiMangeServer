@@ -2,6 +2,8 @@
 
 'use strict';
 
+const path = require('path');
+
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -24,7 +26,7 @@ module.exports = appInfo => {
   config.mongoose = {
     clients: {
       api_server: {
-        url: 'mongodb://192.168.3.110:27019/api_server',
+        url: 'mongodb://localhost:27019',
         options: {
           useFindAndModify: false,
           useUnifiedTopology: true,

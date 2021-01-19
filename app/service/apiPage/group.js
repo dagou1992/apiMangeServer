@@ -1,5 +1,9 @@
 const Service = require('../../core/base_service');
 const { nowTimestamp } = require('../../util/time');
+const { getMarkdown } = require('../../util/markdown');
+
+const fs = require('fs');
+const path = require('path');
 
 class GroupService extends Service {
   async query(data, onlyOne = false) {
@@ -37,12 +41,28 @@ class GroupService extends Service {
   }
 
   async update(data) {
-    const { id, name } = data;
+    const { id, ...value } = data;
     const result = await this.commonUpdate('apiPage.group', {
       id,
-      data: { name },
+      data: value,
     });
     return result;
+  }
+
+  async export({ fileName: name, group, pageSize, pageIndex }) {
+    const { config, ctx } = this;
+    const param = { group, pageSize, pageIndex };
+    const result = await ctx.service.apiPage.api.query(
+      param,
+      ctx.query.id !== undefined,
+    );
+    const fileName = `${name}.md`;
+    const filePath = path.join(config.baseDir, 'app/public', fileName);
+    await fs.writeFile(filePath, getMarkdown(result.data));
+    ctx.attachment(fileName);
+    ctx.set('Content-Type', 'application/octet-stream');
+    setTimeout(() => fs.unlink(filePath, err => {}));
+    return fs.createReadStream(filePath);
   }
 
   async delete(id) {
