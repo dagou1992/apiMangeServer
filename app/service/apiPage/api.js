@@ -38,7 +38,7 @@ class ApiPageService extends Service {
           { id: item.group },
           true,
         );
-        item.groupName = group.name;
+        item.groupName = (group && group.name) || null;
       }
       return onlyOne ? result[0] : { data: result, total };
     } catch (e) {

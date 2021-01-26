@@ -26,7 +26,7 @@ class GroupController extends Controller {
   }
 
   async export() {
-    const { ctx, app, config } = this;
+    const { ctx } = this;
     const result = await ctx.service.apiPage.group.export(ctx.request.body);
     ctx.body = result;
   }
